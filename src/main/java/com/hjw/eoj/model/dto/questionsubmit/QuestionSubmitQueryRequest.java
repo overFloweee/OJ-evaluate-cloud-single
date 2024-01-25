@@ -1,15 +1,18 @@
 package com.hjw.eoj.model.dto.questionsubmit;
 
+import com.hjw.eoj.common.PageRequest;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
 /**
- * 题目提交 实体类
+ * 题目提交 查询 实体类
  * @TableName question_submit
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class QuestionAddSubmitRequest implements Serializable {
+public class QuestionSubmitQueryRequest extends PageRequest implements Serializable {
 
     /**
      * 编程语言
@@ -17,14 +20,19 @@ public class QuestionAddSubmitRequest implements Serializable {
     private String language;
 
     /**
-     * 用户代码
+     * 提交状态
      */
-    private String code;
+    private Integer status;
 
     /**
      * 题目id
      */
     private Long questionId;
+
+    /**
+     * 用户id
+     */
+    private Long userId;
 
     private static final long serialVersionUID = 1L;
 }

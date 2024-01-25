@@ -18,6 +18,7 @@ import com.hjw.eoj.model.dto.question.QuestionAddRequest;
 import com.hjw.eoj.model.dto.question.QuestionEditRequest;
 import com.hjw.eoj.model.dto.question.QuestionQueryRequest;
 import com.hjw.eoj.model.entity.Question;
+import com.hjw.eoj.model.entity.QuestionSubmit;
 import com.hjw.eoj.model.entity.User;
 import com.hjw.eoj.model.vo.QuestionVO;
 import com.hjw.eoj.model.vo.UserVO;
@@ -156,6 +157,8 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         queryWrapper.like(StrUtil.isNotBlank(title), Question::getTitle, title);
         queryWrapper.like(StrUtil.isNotBlank(content), Question::getContent, content);
         queryWrapper.like(StrUtil.isNotBlank(answer), Question::getAnswer, answer);
+        queryWrapper.eq(Question::getIsDelete,false);
+
         if (CollectionUtil.isNotEmpty(tags))
         {
             for (String tag : tags)
@@ -165,7 +168,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         }
         queryWrapper.eq(ObjectUtil.isNotEmpty(userId), Question::getUserId, userId);
         queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
-                question -> sortOrder
+                question -> sortField
         );
 
         return queryWrapper;
