@@ -18,7 +18,6 @@ import com.hjw.eoj.model.dto.question.QuestionAddRequest;
 import com.hjw.eoj.model.dto.question.QuestionEditRequest;
 import com.hjw.eoj.model.dto.question.QuestionQueryRequest;
 import com.hjw.eoj.model.entity.Question;
-import com.hjw.eoj.model.entity.QuestionSubmit;
 import com.hjw.eoj.model.entity.User;
 import com.hjw.eoj.model.vo.QuestionVO;
 import com.hjw.eoj.model.vo.UserVO;

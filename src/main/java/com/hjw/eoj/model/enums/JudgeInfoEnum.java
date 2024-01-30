@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 判题信息 枚举
+ * 判题完成后 沙盒给出的判题信息 枚举
  */
 public enum JudgeInfoEnum
 {

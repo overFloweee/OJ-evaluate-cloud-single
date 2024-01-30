@@ -1,6 +1,7 @@
 package com.hjw.eoj.model.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.hjw.eoj.model.dto.questionsubmit.JudgeInfo;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -33,6 +34,7 @@ public class QuestionSubmit implements Serializable {
 
     /**
      * 判题信息（json 数组）
+     * 对应着 JudgeInfo 实体类，其中包含 运行时间，消耗内存 -> InfoEnum -> String judgeInfo;
      */
     private String judgeInfo;
 

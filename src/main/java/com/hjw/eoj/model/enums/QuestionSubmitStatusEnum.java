@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 提交状态枚举
+ * 提交状态 枚举 （提交到消息队列）
  */
 public enum QuestionSubmitStatusEnum
 {

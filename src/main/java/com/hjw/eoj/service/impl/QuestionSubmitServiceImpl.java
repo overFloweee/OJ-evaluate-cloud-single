@@ -2,7 +2,6 @@ package com.hjw.eoj.service.impl;
 
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -11,8 +10,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hjw.eoj.common.ErrorCode;
 import com.hjw.eoj.constant.CommonConstant;
 import com.hjw.eoj.exception.BusinessException;
+import com.hjw.eoj.judge.JudgeService;
 import com.hjw.eoj.mapper.QuestionSubmitMapper;
-import com.hjw.eoj.model.dto.question.QuestionQueryRequest;
 import com.hjw.eoj.model.dto.questionsubmit.QuestionSubmitAddRequest;
 import com.hjw.eoj.model.dto.questionsubmit.QuestionSubmitQueryRequest;
 import com.hjw.eoj.model.entity.Question;
@@ -21,17 +20,18 @@ import com.hjw.eoj.model.entity.User;
 import com.hjw.eoj.model.enums.QuestionSubmitLanguageEnum;
 import com.hjw.eoj.model.enums.QuestionSubmitStatusEnum;
 import com.hjw.eoj.model.vo.QuestionSubmitVO;
-import com.hjw.eoj.model.vo.QuestionVO;
-import com.hjw.eoj.model.vo.UserVO;
 import com.hjw.eoj.service.QuestionService;
 import com.hjw.eoj.service.QuestionSubmitService;
 import com.hjw.eoj.service.UserService;
 import com.hjw.eoj.utils.SqlUtils;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /**
@@ -40,16 +40,17 @@ import java.util.stream.Collectors;
  * @createDate 2024-01-22 21:50:08
  */
 @Service
+@RequiredArgsConstructor
 public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper, QuestionSubmit>
         implements QuestionSubmitService
 {
 
+    private final QuestionService questionService;
+    private final UserService userService;
+    private final HttpServletRequest request;
     @Resource
-    private QuestionService questionService;
-    @Resource
-    private UserService userService;
-    @Resource
-    private HttpServletRequest request;
+    @Lazy
+    private  JudgeService judgeService;
 
     @Override
     public long doQuestionSubmit(QuestionSubmitAddRequest questionSubmitAddRequest)
@@ -91,8 +92,16 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "用户提交失败");
         }
+        // todo 提交到消息队列
+        Long questionSubmitId = questionSubmit.getId();
+        CompletableFuture.runAsync(() ->
+        {
+            judgeService.doJudge(questionSubmitId);
+        });
 
-        return questionSubmit.getId();
+        // 获取判题结果，更新到数据库
+
+        return questionSubmitId;
     }
 
 

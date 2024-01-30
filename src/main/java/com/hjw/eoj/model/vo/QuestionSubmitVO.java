@@ -1,12 +1,7 @@
 package com.hjw.eoj.model.vo;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONUtil;
-import com.baomidou.mybatisplus.annotation.*;
-import com.google.gson.Gson;
-import com.hjw.eoj.model.dto.question.JudgeConfig;
 import com.hjw.eoj.model.dto.questionsubmit.JudgeInfo;
-import com.hjw.eoj.model.entity.Question;
 import com.hjw.eoj.model.entity.QuestionSubmit;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
