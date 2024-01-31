@@ -1,5 +1,6 @@
 package com.hjw.eoj.judge.strategy;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.hjw.eoj.model.dto.question.JudgeCase;
 import com.hjw.eoj.model.dto.question.JudgeConfig;
@@ -20,6 +21,7 @@ public class JavaLanguageJudgeStrategyImpl implements JudgeStrategy
 
     /**
      * java 判题策略，去返回相应 判题信息
+     *
      * @param judgeContext
      * @return
      */
@@ -60,7 +62,9 @@ public class JavaLanguageJudgeStrategyImpl implements JudgeStrategy
         {
             JudgeCase judgeCase = judgeCaseList.get(i);
             // 与正确答案 的输出结果 不符
-            if (!judgeCase.getOutput().equals(outputList.get(i)))
+            String outputAnswer = outputList.get(i);
+            String trimOutput = outputAnswer.replaceAll("\n", "").trim();
+            if (!judgeCase.getOutput().equals(trimOutput))
             {
                 // 答案错误
                 judgeInfoEnum = JudgeInfoEnum.WRONG_ANSWER;
@@ -68,6 +72,7 @@ public class JavaLanguageJudgeStrategyImpl implements JudgeStrategy
                 return judgeInfoResponse;
             }
         }
+
 
         // 判断题目限制
         String limitConfig = question.getJudgeConfig();
@@ -92,6 +97,7 @@ public class JavaLanguageJudgeStrategyImpl implements JudgeStrategy
 
         // 若无上述报错，则 accepted
         judgeInfoResponse.setMessage(judgeInfoEnum.getValue());
+
         return judgeInfoResponse;
 
 

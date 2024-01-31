@@ -5,6 +5,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hjw.eoj.common.ErrorCode;
@@ -50,7 +51,7 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
     private final HttpServletRequest request;
     @Resource
     @Lazy
-    private  JudgeService judgeService;
+    private JudgeService judgeService;
 
     @Override
     public long doQuestionSubmit(QuestionSubmitAddRequest questionSubmitAddRequest)
@@ -97,9 +98,11 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         CompletableFuture.runAsync(() ->
         {
             judgeService.doJudge(questionSubmitId);
+            // 获取判题结果，更新到数据库
+
+
         });
 
-        // 获取判题结果，更新到数据库
 
         return questionSubmitId;
     }
@@ -109,9 +112,9 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
      * 获取查询包装类（根据用户传递的查询包装类，生成mybatis支持的查询类）
      */
     @Override
-    public LambdaQueryWrapper<QuestionSubmit> getQueryWrapper(QuestionSubmitQueryRequest questionSubmitQueryRequest)
+    public QueryWrapper<QuestionSubmit> getQueryWrapper(QuestionSubmitQueryRequest questionSubmitQueryRequest)
     {
-        LambdaQueryWrapper<QuestionSubmit> queryWrapper = new LambdaQueryWrapper<>();
+        QueryWrapper<QuestionSubmit> queryWrapper = new QueryWrapper<>();
         if (questionSubmitQueryRequest == null)
         {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -125,14 +128,15 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         String sortOrder = questionSubmitQueryRequest.getSortOrder();
 
 
-        queryWrapper.eq(StrUtil.isNotBlank(language), QuestionSubmit::getLanguage, language);
-        queryWrapper.like(QuestionSubmitStatusEnum.getEnumByValue(status) != null, QuestionSubmit::getStatus, status);
-        queryWrapper.eq(ObjectUtil.isNotEmpty(questionId), QuestionSubmit::getQuestionId, questionId);
-        queryWrapper.eq(ObjectUtil.isNotEmpty(userId), QuestionSubmit::getUserId, userId);
-        queryWrapper.eq(QuestionSubmit::getIsDelete, false);
+        queryWrapper.lambda().eq(StrUtil.isNotBlank(language), QuestionSubmit::getLanguage, language);
+        queryWrapper.lambda()
+                .like(QuestionSubmitStatusEnum.getEnumByValue(status) != null, QuestionSubmit::getStatus, status);
+        queryWrapper.lambda().eq(ObjectUtil.isNotEmpty(questionId), QuestionSubmit::getQuestionId, questionId);
+        queryWrapper.lambda().eq(ObjectUtil.isNotEmpty(userId), QuestionSubmit::getUserId, userId);
+        queryWrapper.lambda().eq(QuestionSubmit::getIsDelete, false);
         // 根据 查询条件进行排序 ，sortField - 需要排序的字段， sortOrder - 排序方式 asc、desc
         queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
-                question -> sortField
+                sortField
         );
 
         return queryWrapper;

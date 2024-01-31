@@ -7,14 +7,20 @@ import com.hjw.eoj.judge.sandbox.model.ExecuteCodeRequest;
 import com.hjw.eoj.judge.sandbox.model.ExecuteCodeResponse;
 import com.hjw.eoj.model.enums.QuestionSubmitLanguageEnum;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 class ExampleCodeSandboxTest
 {
+
+    @Value("${codesandbox.type:example}")
+    private String type;
 
     @Test
     void executeCode()
@@ -35,17 +41,17 @@ class ExampleCodeSandboxTest
     void executeCodeFactory()
     {
         // 生成代码沙箱
-        CodeSandbox codeSandbox = CodeSandboxFactory.newInstance();
+        CodeSandbox codeSandbox = CodeSandboxFactory.newInstance(type);
         // 生成代码沙箱 代理类
         CodeSandboxProxy codeSandboxProxy = new CodeSandboxProxy(codeSandbox);
 
-        String code = "int main(){}";
+        String code = "public class Main\n" + "{\n" + "    public static void main(String[] args)\n" + "    {\n" + "        int arg1 = Integer.parseInt(args[0]);\n" + "        int arg2 = Integer.parseInt(args[1]);\n" + "        System.out.println(\"参数1：\" + arg1);\n" + "        System.out.println(\"参数2：\" + arg2);\n" + "        System.out.println(\"结果是：\" + (arg1 + arg2));\n" + "    }\n" + "}\n" + "\n";
         String language = QuestionSubmitLanguageEnum.JAVA.getValue();
-        List<String> list = Arrays.asList("1 2", "3 4");
+        List<String> list = Arrays.asList("11 88", "3 4");
 
         ExecuteCodeRequest build = ExecuteCodeRequest.builder().code(code).language(language).inputList(list).build();
 
-         // 代理类 执行原始方法
+        // 代理类 执行原始方法
         ExecuteCodeResponse executeCodeResponse = codeSandboxProxy.executeCode(build);
 
     }

@@ -2,6 +2,7 @@ package com.hjw.eoj.service;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hjw.eoj.model.dto.questionsubmit.QuestionSubmitAddRequest;
@@ -33,7 +34,7 @@ public interface QuestionSubmitService extends IService<QuestionSubmit>
      * @param questionSubmitQueryRequest
      * @return
      */
-    LambdaQueryWrapper<QuestionSubmit> getQueryWrapper(QuestionSubmitQueryRequest questionSubmitQueryRequest);
+    QueryWrapper<QuestionSubmit> getQueryWrapper(QuestionSubmitQueryRequest questionSubmitQueryRequest);
 
 
     /**

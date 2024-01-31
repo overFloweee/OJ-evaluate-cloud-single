@@ -22,7 +22,7 @@ public class CodeSandboxProxy implements CodeSandbox
     {
         log.info("代码沙箱请求信息:" + executeCodeRequest);
         ExecuteCodeResponse executeCodeResponse = codeSandbox.executeCode(executeCodeRequest);
-        log.info("代码沙箱请求信息:" + executeCodeResponse);
+        log.info("代码沙箱响应信息:" + executeCodeResponse);
         return executeCodeResponse;
 
 

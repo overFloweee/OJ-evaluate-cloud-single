@@ -12,7 +12,15 @@
     <groupId>com.hjw</groupId>
     <artifactId>evaluate-oj-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
     <name>evaluate-oj-backend</name>
+    <modules>
+        <module>evaluate-common</module>
+        <module>evaluate-code-sandbox</module>
+        <module>evaluate-user</module>
+        <module>evaluate-gateway</module>
+        <module>evaluate-oj</module>
+    </modules>
     <properties>
         <java.version>1.8</java.version>
     </properties>
@@ -48,11 +56,6 @@
         <dependency>
             <groupId>org.springframework.session</groupId>
             <artifactId>spring-session-data-redis</artifactId>
-        </dependency>
-        <!-- elasticsearch-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
         </dependency>
         <!-- https://doc.xiaominfo.com/docs/quick-start#openapi2 -->
         <dependency>
